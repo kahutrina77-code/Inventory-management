@@ -25,7 +25,7 @@ def get_single_item(id):
 
 @app.route("/inventory", methods=["POST"])
 def add_item():
-    # Get the data sent from the CLI
+    # Get the data sent from the request body
     new_data = request.get_json()
 
     # Create a new item with a unique ID
@@ -68,6 +68,8 @@ def update_item(id):
     # If we get here, the item was not found
     return jsonify({"error": "Item not found"}), 404
 
+
+
 @app.route("/inventory/<int:id>", methods=["DELETE"])
 def delete_item(id):
     # Loop through the inventory list to find the item
@@ -79,6 +81,15 @@ def delete_item(id):
     # If we get here, the item was not found
     return jsonify({"error": "Item not found"}), 404
 
+@app.route('/product/<barcode>', methods=["GET"])
+def get_product(barcode):
+    #we need to call our fetch function from external_api.py 
+    result = fetch_product_by_barcode(barcode)
+    
+    #error message
+    if "error" in result:
+        return jsonify(result), 404
+    return jsonify(result), 200
 
 
 # Run the app
